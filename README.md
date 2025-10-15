@@ -1,6 +1,6 @@
 # CMD: Genotype-Phenotype Association Analysis
+![A deep learning framework for genotype-phenotype association analysis using CMD architecture with Mamba2.](./main_figure_cmd_00.png)
 
-A deep learning framework for genotype-phenotype association analysis using CMD architecture with Mamba2.
 
 ## Quick Start
 
