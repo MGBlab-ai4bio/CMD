@@ -1,56 +1,100 @@
-## Padding-free Interpretable Genomic Predication Directly from Highly Sparse Genotype Data using CMD source code 🥕 
+# CMD: Genotype-Phenotype Association Analysis
 
+A deep learning framework for genotype-phenotype association analysis using CMD architecture with Mamba2.
 
+## Quick Start
 
-## <font style="color:rgb(31, 35, 40);">Model architecture</font>
-![](https://cdn.nlark.com/yuque/0/2025/png/2978547/1754723216521-90d0b0cf-6068-486e-99e1-01380e52b595.png)
+1. **Run the main notebook**:
+   ```bash
+   jupyter notebook test.ipynb
+   ```
 
-### Data
+2. **Prepare your data**:
+   - Genotype data: `test_geno.csv`
+   - Phenotype data: `test_pheno.txt`
+
+   **If using your own data**, convert VCF format to CSV:
+   ```bash
+   python data/vcf_to_csv.py
+   ```
+   This script converts VCF files to the required CSV format with numeric encoding (0, 1, 2, -1 for missing).
+
+## Data Format
+
+### Input Requirements
+- **Genotype Data**: CSV format with samples as rows, SNPs as columns
+- **Encoding**: 0 (homozygous reference), 1 (heterozygous), 2 (homozygous alternative), -1 (missing)
+- **Phenotype Data**: CSV format with sample IDs as index and continuous values
+
+### VCF to CSV Conversion
+The `data/vcf_to_csv.py` script handles:
+- VCF genotype format conversion (0/0, 0/1, 1/1 → 0, 1, 2)
+- Missing data handling (./. → -1)
+- Sample numbering and variant ID generation
+
+3. **Configure parameters**:
+   ```python
+   class Config:
+       USE_PRETRAINED = True/False  #  Use pre-trained model
+       MISSING_RATIO = 0.0   # Missing data ratio
+       EPOCHS = 100          # Training epochs
+       BATCH_SIZE = 32       # Batch size
+       MAX_ROWS = 1000        # Maximum number of samples to load (adjust based on your data size)
+   ```
+
+## Features
+
+- **CMD Autoencoder**: Pre-training for feature extraction
+- **CMD Phenotype Predictor**: Final phenotype prediction
+- **10-fold Cross-validation**: Robust model evaluation
+- **Early Stopping**: Prevents overfitting
+- **Pre-trained Model Support**: Transfer learning capabilities
+
+## Usage
+
+### Basic Configuration
+```python
+config = Config()
+config.USE_PRETRAINED = True
+config.MISSING_RATIO = 0.1
 ```
-The datasets associated with the paper can be downloaded and processed from the online sources mentioned in the paper. link.
 
+### Advanced Configuration
+```python
+config.OUT_CHANNELS = 512
+config.D_STATE = 256
+config.LEARNING_RATE = 0.0001
+config.EARLY_STOPPING_PATIENCE = 30
 ```
 
-## <font style="color:rgb(31, 35, 40);">Prerequisites</font>
-```
-conda create -n gs_mamba2 python=3.10  
-conda activate gs_mamba2  
-pip install torch numpy pandas scikit-learn scipy tqdm
+## Output
+
+The system generates:
+- Correlation coefficients for each fold
+- Mean correlation ± standard deviation
+- Training logs and model checkpoints
+
+
+## File Structure
 
 ```
-
-## Data Preparation
-
-+ **Genotype Data**: Three-channel one-hot encoded SNP matrix containing values `0`, `1`, `2`, and `-1` (missing values).
-+ **Phenotype Data**: Continuous or categorical phenotype values.
-+ **Data File Format**:
-    - The first column should be the sample ID (or SNP locus ID).
-    - No sex chromosome markers.
-    - Data should be split into training and test sets in advance or will be split automatically by the code
-
-
-
-## How to Run
-1. **Train the model**
-
-```
- python CMD.py \
-
-  --data_path new_data.csv \  
-  --pheno_path 1000pheno.txt \  
-  --missing_ratio 0.3 \  
-  --batch_size 32 \  
-  --lr 0.0001 \  
-  --epochs 100 \  
-  --n_splits 5
-
+CMD/
+├── test.ipynb                    # Main analysis notebook
+├── model/                        # Model checkpoints
+├── train/                        # Training utilities
+├── data/                         # Data processing
+├── confidence/                   # Confidence analysis
+└── README.md                     # This file
 ```
 
-2. **Model Evaluation**
-    - Uses **KFold cross-validation** for training and evaluation
-    - Supports **Early Stopping**
-    - Outputs performance metrics including Pearson correlation coefficient and RMSE
-3. **Save Results**
-    - Predicted and true values saved as `.csv`
-    - Performance metrics for each cross-validation fold recorded in a log file
+## Requirements
+
+- Python 3.10+
+- PyTorch with CUDA support
+- Mamba-SSM
+- NumPy, Pandas, Scikit-learn
+
+## Citation
+
+If you use this code, please cite the original paper.
 
