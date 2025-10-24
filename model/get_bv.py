@@ -77,21 +77,17 @@ class get_bv(nn.Module):
     
 def calculate_n_snp(input_length, kernel_size, stride):
     
-    # 第一次卷积后的序列长度
-    # 使用公式: L_out = (L_in - kernel_size) / stride + 1
+
     conv1_output_length = (input_length - kernel_size) // stride + 1
     
-    # 第二次卷积后的序列长度 (使用 padding='same')
-    # 由于 padding='same'，序列长度保持不变
+
     conv2_output_length = conv1_output_length
     
-    # n_snp = 第二个卷积层的输出通道数 * 序列长度
-    # 注意：第二个卷积层的输出通道数等于第一个卷积层的步长参数
+
     n_snp = stride * conv2_output_length
     return n_snp
 
 if __name__ == "__main__":
-    # n_snp=calculate_n_snp(3000,40,20)
     get_bv=get_bv(3, 256, 40, 20,  n_snp=3000,device="cpu")
     X = torch.randn(20, 3, 3000)
     print(get_bv(X).shape)
