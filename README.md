@@ -1,6 +1,6 @@
-# CMD Genotype-Phenotype Association Analysis based on Mamba2
-
-## Project Overview
+# CMD Genotype-Phenotype Association Analysis based on Mamba2 
+![A deep learning framework for genotype-phenotype association analysis using CMD architecture with Mamba2.](./main_figure_cmd_00.png)
+## Project Overview 🥕 
 
 CMD is a deep learning project based on the Mamba2 architecture for genotype-phenotype association analysis. This project combines convolutional neural networks with Mamba state space models to process large-scale genomic data and predict phenotypic traits.
 
