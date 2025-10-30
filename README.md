@@ -40,9 +40,25 @@ CMD/
 
 ### 1. Data Processing
 - Support for multiple genotype data formats (CSV, VCF, etc.)
+- VCF to CSV format conversion tools
 - Data preprocessing and standardization
 - Missing value handling
 - Data augmentation and simulation
+
+#### Data Format
+- **Genotype Data**: CSV format with samples as rows, SNPs as columns
+- **Encoding**: 0 (homozygous reference), 1 (heterozygous), 2 (homozygous alternative), -1 (missing)
+- **Phenotype Data**: CSV format with sample IDs as index and continuous values
+
+#### VCF to CSV Conversion
+To convert VCF files to the required CSV format:
+```bash
+python data/vcf_to_csv.py
+```
+This script handles:
+- VCF genotype format conversion (0/0, 0/1, 1/1 → 0, 1, 2)
+- Missing data handling (./. → -1)
+- Sample numbering and variant ID generation
 
 ### 2. Model Architecture
 - **CMD-AutoEncoder**: Convolutional and Mamba-based autoencoder
@@ -72,12 +88,23 @@ pip install -r requirements.txt
 ### Basic Usage
 
 1. **Data Preparation**
+   
+   **If you have VCF format data, convert it first:**
+   ```bash
+   python data/vcf_to_csv.py
+   ```
+   
+   **Load your data:**
    ```python
    from data.data_utils import load_genotype_data
    from config import Config
    
-   # Load data
-   genotype_data = load_genotype_data('dataset/test_geno.csv')
+   # Load genotype data (CSV format)
+   genotype_data = load_genotype_data('./dataset/test_geno.csv')
+   
+   # Data format requirements:
+   # - Genotype: samples × SNPs matrix (values: 0, 1, 2, or -1 for missing)
+   # - Phenotype: CSV with sample IDs and continuous values
    ```
 
 2. **Model Training**
@@ -120,13 +147,29 @@ Check the Jupyter notebook files in the `tutorial/` directory:
 
 ## Requirements
 
-- Python >= 3.7
-- PyTorch >= 1.7.0
-- pandas >= 1.0.0
-- numpy >= 1.18.0
-- scikit-learn >= 0.24.0
-- mamba-ssm >= 1.0.0
-- causal-conv1d >= 1.0.0
+### Core Dependencies
+- Python 3.10.12
+- PyTorch 2.0.1 
+- NumPy >= 1.24.0
+- Pandas >= 2.2.0
+- SciPy >= 1.11.0
+- scikit-learn >= 1.3.0
+- mamba-ssm 2.2.2
+- causal-conv1d 1.4.0
+- triton 2.1.0
+- matplotlib >= 3.8.0
+- seaborn >= 0.13.0
+- tqdm >= 4.64.0
+- pygam 0.10.1
+
+### Installation
+```bash
+# Install all dependencies
+pip install -r requirements.txt
+
+# Note: For GPU support, ensure PyTorch with CUDA is installed
+# Visit https://pytorch.org/ for installation instructions
+```
 
 ## Notes
 

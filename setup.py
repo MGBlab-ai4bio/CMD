@@ -3,44 +3,37 @@
 
 from setuptools import setup, find_packages
 
-with open("README.md", "r", encoding="utf-8") as fh:
-    long_description = fh.read()
-
-with open("requirements.txt", "r", encoding="utf-8") as fh:
-    requirements = [line.strip() for line in fh.readlines() if line.strip() and not line.startswith("#")]
+def load_requirements():
+    with open("requirements.txt", "r", encoding="utf-8") as f:
+        return [line.strip() for line in f if line.strip() and not line.startswith("#")]
 
 setup(
-    name="cmd",
-    version="0.1.0",
-    author="Unknown",
-    author_email="unknown@example.com",
-    description="Genotype-Phenotype Association Analysis based on Mamba2",
-    long_description=long_description,
+    name="CMD",
+    version="1.0.0",
+    description="Genotype-Phenotype association framework based on Mamba2",
+    long_description=open("README.md", "r", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/unknown/cmd1023",
     packages=find_packages(),
+    python_requires=">=3.8",
+    install_requires=load_requirements(),
+    entry_points={
+        "console_scripts": [
+            "cmd-train=train.train:main",
+            "cmd-predict=model.get_bv:main",
+        ],
+    },
+    include_package_data=True,
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Science/Research",
         "Topic :: Scientific/Engineering :: Bio-Informatics",
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
     ],
-    python_requires=">=3.7",
-    install_requires=requirements,
-    entry_points={
-        "console_scripts": [
-            "cmd1023-train=train.train:main",
-            "cmd1023-predict=model.get_bv:main",
-        ],
-    },
-    include_package_data=True,
-    package_data={
-        "": ["README.md", "requirements.txt"],
-        "dataset": ["dataset/*"],
+    project_urls={
+        "GitHub": "https://github.com/MGBlab-ai4bio/CMD",
+        "Hardware": "Optimized for NVIDIA RTX 4090 (CUDA 11.7, Compute Capability 8.9)",
     },
 )
